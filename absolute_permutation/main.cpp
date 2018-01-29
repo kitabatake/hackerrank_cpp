@@ -7,40 +7,17 @@
 
 using namespace std;
 
-bool dfs(int n, int k, int i, map<int, int> used, vector<int> &buffer) {
-//    cout << "i:" << i << endl;
-//    for (int b: buffer) cout << b << " ";
-//    cout << endl;
-    if (buffer.size() == n) return true;
-
-    bool flag = false;
-    vector<int> diffs { -k, k };
-    for (int diff: diffs) {
-        buffer.resize(i - 1);
-        int x = i + diff;
-//        if (i == 99) {
-//            cout << "x is " << x << endl;
-//            for (int hoge: buffer) cout << hoge << " ";
-//            cout << endl;
-//        }
-        if (x >= 1 && x <= n && !used[x]) {
-            used[x] = true;
-            buffer.push_back(x);
-            flag = dfs(n, k, i + 1, used, buffer);
-            if (flag) break;
-        }
-    }
-    return flag;
-}
-
 void printAnswer(int n, int k) {
-    vector<int> ans;
-    map<int, int> used;
-    bool flag = dfs(n, k, 1, used, ans);
-    if (flag){
-        for (int x: ans) cout << x << " ";
-    } else {
+    if (k == 0) {
+        for (int i = 0; i < n; i++) cout << i + 1 << " ";
+    } else if (n % (2 * k) != 0) {
         cout << -1;
+    } else {
+        for (int i = 0; i < n / (2 * k); i++) {
+            int base = i * 2 * k;
+            for (int j = 1; j <= k; j++) cout << base + k + j << " ";
+            for (int j = 1; j <= k; j++) cout << base + j << " ";
+        }
     }
     cout << endl;
 }
