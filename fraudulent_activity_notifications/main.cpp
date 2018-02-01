@@ -9,40 +9,49 @@ using namespace std;
 
 int N, D;
 
-vector<int> countsToSorted(vector<int> &counts) {
-    vector<int> sorted;
-    for (int i = 0; i < 200; i++) {
-        for (int j = 0; j < counts[i]; j++) sorted.push_back(i);
-    }
-    return sorted;
-}
+float countsToMedian(vector<int> &counts) {
+//    for (int c: counts) cout << c << " ";
+//    cout << endl;
 
-float median(vector<int> array) {
-    if (D % 2 == 1) {
-        return (float)array[D / 2];
-    } else {
-        return (float)(array[D / 2] + array[D / 2 - 1]) / 2;
+    int totalCount = 0;
+    int prev = -1;
+    for (int i = 0; i < 201; i++) {
+        totalCount += counts[i];
+        if (totalCount > (float)D / 2) {
+            if (D % 2 == 1) {
+                return (float)i;
+            } else {
+                if (totalCount - counts[i] == D / 2 - 1){
+//                    cout << "hoge: "<< i << " + " << prev << ". " << totalCount << ". i is" << i <<  endl;
+                    return (float)(i + prev) / 2;
+                } else {
+                    return (float)(i * 2) / 2;
+                }
+            }
+        }
+        if (counts[i] != 0) prev = i;
     }
+    return -1;
 }
 
 bool isNotify(int e, vector<int> &counts) {
-    return (2 * median(countsToSorted(counts))) <= e;
+    float median = countsToMedian(counts);
+//    cout << median << endl;
+    return (2 * median) <= e;
 }
 
 int main() {
     cin >> N >> D;
-    vector<int> counts(200);
-    int e, ans = 0;
-    int prev = -1;
-    for (int i = 0; i < N; i++) {
-        cin >> e;
-        counts[e]++;
-        if (i < D) continue;
-        if (prev != -1) {
-            counts[prev]--;
-        }
-        if (isNotify(e, counts)) ans++;
-        prev = e;
+    vector<int> expenditures(N);
+    for (int i = 0; i < N; i++) cin >> expenditures[i];
+
+    int ans = 0;
+    vector<int> counts(201);
+    for (int i = 0; i < D; i++) counts[expenditures[i]]++;
+    for (int i = D; i < N; i++) {
+        if (isNotify(expenditures[i], counts)) ans++;
+        counts[expenditures[i]]++;
+        counts[expenditures[i - D]]--;
     }
     cout << ans << endl;
 }
