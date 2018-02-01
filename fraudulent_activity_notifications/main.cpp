@@ -10,9 +10,6 @@ using namespace std;
 int N, D;
 
 float countsToMedian(vector<int> &counts) {
-//    for (int c: counts) cout << c << " ";
-//    cout << endl;
-
     int totalCount = 0;
     int prev = -1;
     for (int i = 0; i < 201; i++) {
@@ -21,8 +18,7 @@ float countsToMedian(vector<int> &counts) {
             if (D % 2 == 1) {
                 return (float)i;
             } else {
-                if (totalCount - counts[i] == D / 2 - 1){
-//                    cout << "hoge: "<< i << " + " << prev << ". " << totalCount << ". i is" << i <<  endl;
+                if (totalCount - counts[i] == D / 2){
                     return (float)(i + prev) / 2;
                 } else {
                     return (float)(i * 2) / 2;
@@ -35,9 +31,7 @@ float countsToMedian(vector<int> &counts) {
 }
 
 bool isNotify(int e, vector<int> &counts) {
-    float median = countsToMedian(counts);
-//    cout << median << endl;
-    return (2 * median) <= e;
+    return (2 * countsToMedian(counts)) <= e;
 }
 
 int main() {
